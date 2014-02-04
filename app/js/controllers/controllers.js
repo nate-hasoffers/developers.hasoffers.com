@@ -1,4 +1,4 @@
-(function(window, DISQUS) {
+(function(window) {
     'use strict';
 
     /**
@@ -35,27 +35,6 @@
               });
           });
       });
-    };
-
-    /**
-     * Controller to manage the Disqus comments.
-     * Resets every time a new method view is displayed.
-     *
-     * @param {Object}           $scope        Angular scope.
-     * @param {ng.$routeParams}  $routeParams  Angular $routeParams service.
-     */
-    window.DisqusController = function($scope, $routeParams) {
-        var identifier = $routeParams.controllerName + '::' + $routeParams.methodName;
-        var url = document.location.origin + '/#!' + identifier;
-
-         // reset the disqus comments for the current page
-        DISQUS.reset({
-            reload: true,
-            config: function() {
-                this.page.identifier = identifier;
-                this.page.url = url;
-            }
-        });
     };
 
     /**
@@ -271,4 +250,4 @@
             }; // updateApiCall()
         }); // get external doc
     }; // MethodViewCtrl
-})(window, DISQUS);
+})(window);
