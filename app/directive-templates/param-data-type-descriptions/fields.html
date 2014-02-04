@@ -1,0 +1,13 @@
+<p>Parameters that accept an Array of Model Fields are passed the same way as an Array of string parameter, using the
+	"[]" notation after each value provided, but the values that can be passed are restricted to the field names for a
+	specific model.  This data type is typically implemented for methods that return models, so that the number of
+	fields returned can be restricted only to those the caller is interested in.  When this parameter is optional it
+	typically indicates that if no fields are passed it will return all the fields for the model, but if any fields are
+	passed it will return only those which are enumerated.</p>
+
+<p>For example, an API method that has an "Array of Model Fields" parameter named "fields" and scoped to the Offer model
+	could be called in the following way if the "status", "id", and "name" fields are desired:</p>
+
+<pre>
+&fields[]=status&fields[]=id&fields[]=name
+</pre>

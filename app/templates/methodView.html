@@ -1,0 +1,122 @@
+<ul class="breadcrumb">
+    <li>
+        <span>
+            <a href="#/{{currentApi.alias}}">{{currentApi.longName}}</a>
+        </span>
+
+        <span class="divider">/</span>
+    </li>
+
+    <li>
+        <span>{{vm.method.target.name}} :: {{vm.method.name}}</span>
+    </li>
+</ul>
+
+<dl>
+    <dt>Target</dt>
+    <dd>{{vm.method.target.name}}</dd>
+
+    <dt>Method</dt>
+    <dd>{{vm.method.name}}</dd>
+
+    <dt>Description</dt>
+    <dd>
+		<div ng-if="vm.method.nonstandard" class="nonstandard-method-description">
+			This method is nonstandard, so the API call cannot be run directly below.  The provided code examples may require modification in order to call this method.  Explanation: <ul><li>{{vm.method.nonstandard}}</li></ul>
+		</div>
+
+        <p>{{vm.method.shortDescription}}</p>
+        <p>{{vm.method.longDescription}}</p>
+    </dd>
+
+    <dt>
+        Parameters
+        <span ng-show="vm.method.parameters.length > 0" class="label label-important pull-right required-indicator"><i class="icon-asterisk"> Required</i></span>
+    </dt>
+    <dd class="params">
+        <div ng-show="vm.method.parameters.length == 0">None</div>
+        <table class="table table-condensed table-hover" ng-show="vm.method.parameters.length > 0">
+            <thead>
+            <tr>
+                <th>&nbsp;</th>
+                <th>Name</th>
+                <th>Data Type(s)</th>
+                <th>Description</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr ng-repeat="param in vm.method.parameters">
+                <td>
+                    <span ng-show="param.isRequired" class="label label-important required-indicator"><i class="icon-asterisk"></i></span>
+                </td>
+                <td>{{param.name}}</td>
+                <td>
+                    <ul class="{{param.allowedDataTypes.length > 1 ? 'multi-type' : 'single-type'}}">
+                        <li ng-repeat="dataType in param.allowedDataTypes" style="white-space: nowrap;">
+                            <div has-param-data-type-details-button param-data-type="dataType"></div>
+                        </li>
+                    </ul>
+                </td>
+                <td>
+                    <p>{{param.description}}</p>
+
+					<div ng-repeat="dataType in param.allowedDataTypes">
+						<div ng-switch="dataType.name" ng-init="expanded = false">
+							<div ng-switch-when="@contain@">
+								<a ng-click="expanded = !expanded" href="javascript:void(0);">{{expanded ? 'Hide' : 'Show'}} valid contains</a>
+								<div ng-show="expanded" class="embedded-param-details" ng-include="'directive-templates/method-params/contain.html'"></div>
+							</div>
+							<div ng-switch-when="@data@">
+								<a ng-click="expanded = !expanded" href="javascript:void(0);">{{expanded ? 'Hide' : 'Show'}} valid fields</a>
+								<div ng-show="expanded" class="embedded-param-details" ng-include="'directive-templates/method-params/data.html'"></div>
+							</div>
+							<div ng-switch-when="@field@">
+								<a ng-click="expanded = !expanded" href="javascript:void(0);">{{expanded ? 'Hide' : 'Show'}} valid fields</a>
+								<div ng-show="expanded" class="embedded-param-details" ng-include="'directive-templates/method-params/field.html'"></div>
+							</div>
+							<div ng-switch-when="@fields@">
+								<a ng-click="expanded = !expanded" href="javascript:void(0);">{{expanded ? 'Hide' : 'Show'}} valid fields</a>
+								<div ng-show="expanded" class="embedded-param-details" ng-include="'directive-templates/method-params/fields.html'"></div>
+							</div>
+							<div ng-switch-when="@filter@" ng-class="{expanded: 'expanded'}">
+								<a ng-click="expanded = !expanded" href="javascript:void(0);">{{expanded ? 'Hide' : 'Show'}} filterable fields</a>
+								<div ng-show="expanded" class="embedded-param-details" ng-include="'directive-templates/method-params/filter.html'"></div>
+							</div>
+							<div ng-switch-when="@report_filter@">
+								<a ng-click="expanded = !expanded" href="javascript:void(0);">{{expanded ? 'Hide' : 'Show'}} filterable fields</a>
+								<div ng-show="expanded" class="embedded-param-details" ng-include="'directive-templates/method-params/report_filter.html'"></div>
+							</div>
+							<div ng-switch-when="@sort@">
+								<a ng-click="expanded = !expanded" href="javascript:void(0);">{{expanded ? 'Hide' : 'Show'}} sortable fields</a>
+								<div ng-show="expanded" class="embedded-param-details" ng-include="'directive-templates/method-params/sort.html'"></div>
+							</div>
+							<div ng-switch-when="@structured_object@">
+								<a ng-click="expanded = !expanded" href="javascript:void(0);">{{expanded ? 'Hide' : 'Show'}} valid fields</a>
+								<div ng-show="expanded" class="embedded-param-details" ng-include="'directive-templates/method-params/structured_object.html'"></div>
+							</div>
+							<div ng-switch-when="@structured_object_array@">
+								<a ng-click="expanded = !expanded" href="javascript:void(0);">{{expanded ? 'Hide' : 'Show'}} valid fields</a>
+								<div ng-show="expanded" class="embedded-param-details" ng-include="'directive-templates/method-params/structured_object_array.html'"></div>
+							</div>
+						</div>
+					</div>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </dd>
+
+    <dt>Response</dt>
+    <dd ng-show="vm.method.response.description == null && vm.method.response.dataTypes.length == 0">
+        No return value
+    </dd>
+    <dd ng-show="vm.method.response.description != null">
+        {{vm.method.response.description}}
+    </dd>
+
+    <dt ng-show="vm.method.response.dataTypes.length > 0">Return Type(s)</dt>
+    <dd ng-repeat="dataType in vm.method.response.dataTypes">{{vm.DataTypeDescriber.getReturnDataTypeDescription(dataType)}}</dd>
+    <div has-api-builder method="vm.method"></div>
+</dl>

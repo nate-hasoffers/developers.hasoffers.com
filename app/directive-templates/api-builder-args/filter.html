@@ -1,0 +1,66 @@
+<div ng-repeat="fieldFilter in arg.value.fieldFilters">
+	<!-- conditional selector only above the second input -->
+	<div ng-show="$index == 1" style="clear: both;">
+		<select class="input-small"
+				ng-model="arg.value.operator"
+				ng-options="operator for operator in ['AND', 'OR']">
+		</select>
+	</div>
+
+	<!-- read-only conditional between all following inputs -->
+	<div ng-show="$index > 1" style="clear: both;"><strong> -- {{arg.value.operator}} --</strong></div>
+
+	<div style="white-space: nowrap;">
+		<span class="filter-labels-container">
+			<button ng-click="arg.value.fieldFilters.splice($index, 1)"><i ng-show="arg.value.fieldFilters[$index].field != null" class="icon-trash close-image"></i></button> <span class="model-field-name"><strong>{{fieldFilter.field.name}}</strong> <a tooltip-html-unsafe="{{fieldFilter.field.description}}" tooltip-append-to-body="true"><i class="icon-question-sign"></i></a></span>
+
+			<select class="input-small"
+					ng-model="fieldFilter.relationalOperator"
+					ng-change="fieldFilter.initializeDefaultValues()"
+					ng-options="relationalOperator.label for relationalOperator in fieldFilter.getAllowedRelationalFilterOperators()">
+			</select>
+		</span>
+
+		<!-- if [true/false/null/not null] is selected, no need to collect an additional value -->
+		<div class="filter-value-container" ng-if="['TRUE','FALSE','NULL','NOT_NULL'].indexOf(fieldFilter.relationalOperator.value) == -1">
+			<span ng-repeat="filterVal in fieldFilter.value track by $index">
+				<span ng-show="$index > 0"> OR <br /></span>
+				<span class="filter-value-input-group">
+					<!-- drop-down if allowed values are defined on field, else regular text input -->
+					<span ng-if="fieldFilter.field.allowedValues != null">
+						<select ng-model="fieldFilter.value[$index]"
+								class="input-medium"
+								ng-options="val for val in fieldFilter.getAllowedFieldValues(fieldFilter.value[$index]) | orderBy:'toString()'">
+						</select>
+					</span>
+
+					<span ng-if="fieldFilter.field.allowedValues == null">
+						<input class="input-medium"
+							   type="text"
+							   ng-model="fieldFilter.value[$index]"
+							   placeholder="{{fieldFilter.field.dataType}}">
+					</span>
+
+					<span ng-if="fieldFilter.relationalOperator.value == 'EQUAL_TO'">
+						<button ng-show="fieldFilter.value.length > 1"
+								ng-click="fieldFilter.value.splice($index, 1)"><i class="icon-trash close-image"></i></button>
+
+						<button ng-show="$index == (fieldFilter.value.length - 1) && (fieldFilter.field.allowedValues == NULL || fieldFilter.getAllowedFieldValues().length > 0)"
+								class="filter-add-button"
+								ng-click="fieldFilter.appendNewDefaultFilterValue()"><i class="icon-plus"></i></button>
+					</span>
+				</span>
+				<br ng-show="$index < (fieldFilter.value.length - 1)" />
+			</span>
+		</div>
+	</div>
+</div>
+
+<div ng-show="getFilterableFields().length > 0" style="clear: both;">
+	<select class="input-large"
+			ng-model="newField"
+			ng-change="addNewFieldFilter()"
+			ng-options="field.name for field in getFilterableFields() | orderBy:'name'">
+		<option value="">-- Choose a Field --</option>
+	</select>
+</div>

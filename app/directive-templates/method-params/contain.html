@@ -1,0 +1,17 @@
+<table class="table table-bordered">
+	<thead>
+	<tr>
+		<th>Contain Name</th>
+		<th>Related Model</th>
+		<th>Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	<tr ng-repeat="relationship in dataType.relationships | orderBy:'alias'">
+		<td>{{relationship.modelAlias}}</td>
+		<td><div has-model-details-button model="relationship.model"></div></td>
+		<td ng-bind-html="relationship.description"></td>
+	</tr>
+	</tbody>
+</table>

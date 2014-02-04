@@ -1,0 +1,43 @@
+<div ng-controller="Sidebar">
+    <div class="btn-group row-fluid">
+        <a ng-class="{active: currentApi == affiliateApi}" class="btn span6"  href="#/{{affiliateApi.alias}}">{{affiliateApi.longName}}</a>
+        <a ng-class="{active: currentApi == brandApi}" class="btn span6"  href="#/{{brandApi.alias}}">{{brandApi.longName}}</a>
+    </div>
+
+	<accordion class="side-bar" close-others="false">
+		<accordion-group ng-init="docsOpen = true" is-open="docsOpen">
+			<accordion-heading><i class="glyphicon-small" ng-class="docsOpen ? 'icon-chevron-down' : 'icon-chevron-right'"></i> Documentation</accordion-heading>
+			<p><a href="#/{{currentApi.alias}}">Getting Started</a></p>
+
+			<div ng-show="currentApi === brandApi">
+				<p><a href="#/brand/docs/rate-limit">Rate Limiting</a></p>
+			</div>
+
+		</accordion-group>
+
+		<accordion-group is-open="modelsOpen">
+			<accordion-heading><i class="glyphicon-small" ng-class="modelsOpen ? 'icon-chevron-down' : 'icon-chevron-right'"></i> Models</accordion-heading>
+			<input type="text" class="search-query span12" ng-model="vm.modelSearchQuery" placeholder="Search Models">
+			<ul class="model-list">
+				<li ng-repeat="model in vm.api.models | filter:{name:vm.modelSearchQuery} | orderBy:'name'">
+					<a href="#/{{currentApi.alias}}/model/{{model.name}}">{{model.name}}</a>
+				</li>
+			</ul>
+		</accordion-group>
+
+		<accordion-group is-open="methodsOpen">
+			<accordion-heading><i class="glyphicon-small" ng-class="methodsOpen ? 'icon-chevron-down' : 'icon-chevron-right'"></i> Methods</accordion-heading>
+			<input type="text" class="search-query span12" ng-model="vm.methodSearchQuery" placeholder="Search Methods">
+			<ul class="target-list">
+				<li ng-repeat="target in vm.api.targets | HasApiTargetFilter:vm.methodSearchQuery | orderBy:'name'">
+					{{target.name}} ({{(target.methods | HasApiMethodFilter:vm.methodSearchQuery).length}})
+					<ul class="method-list">
+						<li ng-repeat="method in target.methods | HasApiMethodFilter:vm.methodSearchQuery | orderBy:'name'">
+							<a href="#/{{currentApi.alias}}/controller/{{target.name}}/method/{{method.name}}">{{method.name}}</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</accordion-group>
+	</accordion>
+</div>

@@ -1,0 +1,15 @@
+<p>An Array of Structured Object parameter type is used to provide a series of objects, each with multiple key/value pairs.
+	The structure is identical to that of the "Structured Object" type parameter except that it supports passing multiple
+	instances of the structured object for a single parameter.</p>
+
+<p>For example, an API method that has an "Array of Structured Object" parameter named "daterange" that is used to
+	specify multiple date ranges, each with a "start" and an "end" field that is a date.  To specify two ranges
+	(2011-05-01 to 2011-06-02) and (2014-01-01 to 2014-02-01) the parameter would be formatted as follows:</p>
+
+<pre>
+&daterange[0][start]=2011-05-01&daterange[0][end]=2011-06-02&daterange[1][start]=2014-01-01&daterange[1][end]=2014-02-01
+</pre>
+
+<p>Notice that the parameters of each object in the array are grouped together using the 0-based array index in the
+	example above.  The first object has index "0" and the second object has index "1".  To add more objects the index
+	would be incremented.</p>

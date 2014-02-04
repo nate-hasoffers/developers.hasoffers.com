@@ -1,0 +1,72 @@
+<p>Parameters of the Report Filter type are similar to the Filter type except that they are used exclusively when calling
+functions that generate reports.  The format for a Report Filter is slightly different than that of normal Filter
+parameters in a few ways.  The conditional must always be specified using a "conditional" index.  For conditionals that
+take value parameters, and the value(s) are specified as a sibling of the conditional, indexed by the string "values".
+Additionally, some of the available conditionals differ between the two filter types.  Report Filters do not support
+the "OR" construct of regular filters; instead, all provided filters are "AND"ed together.</p>
+
+<p>The "EQUAL_TO" conditional behaves like an IN clause, allowing you to filter for data where the field matches one of
+the provided values.  For example, if you are applying filters to a Conversion Report and you wish to restrict the
+results to conversions having either an "active" or a "pending" status you would format the report filters as follows:</p>
+
+<pre>&filters[status][conditional]=EQUAL_TO&filters[status][values][0]=active&filters[status][values][1]=pending</pre>
+
+<p>In addition to the "EQUAL_TO" operator, following are additional comparison operators that can be used to limit
+results with a Report Filter.</p>
+
+<ul>
+	<li>
+		<p><strong>BETWEEN</strong> - Finds objects which have a field that is in a certain range, inclusive.</p>
+		<p>Example: Retrieve conversions whose date is greater than or equal to 2013-12-29 and less than or equal to 2014-01-03</p>
+		<pre>&filters[Stat.date][conditional]=BETWEEN&filters[Stat.date][values][0]=2013-12-29&filters[Stat.date][values][1]=2014-01-03</pre>
+	</li>
+	<li>
+		<p><strong>NOT_EQUAL_TO</strong> - Finds objects which do not have the provided value.</p>
+		<p>Example: Retrieve conversions whose status is not equal to "active"</p>
+		<pre>&filters[Stat.conversion_status][conditional]=NOT_EQUAL_TO&filters[Stat.conversion_status][values]=active</pre>
+	</li>
+	<li>
+		<p><strong>LESS_THAN</strong> - Finds objects which have a value less than the provided value.</p>
+		<p>Example: Retrieve conversions whose id is less than 25</p>
+		<pre>&filters[Stat.id][conditional]=LESS_THAN&filters[Stat.id][values]=25</pre>
+	</li>
+	<li>
+		<p><strong>LESS_THAN_OR_EQUAL_TO</strong> - Finds objects which have a value less than or equal to the provided value.</p>
+		<p>Example: Retrieve conversions whose id is less than or equal to 25</p>
+		<pre>&filters[Stat.id][conditional]=LESS_THAN_OR_EQUAL_TO&filters[Stat.id][values]=25</pre>
+	</li>
+	<li>
+		<p><strong>GREATER_THAN</strong> - Finds objects which have a value greater than the provided value.</p>
+		<p>Example: Retrieve conversions whose id is greater 25</p>
+		<pre>&filters[Stat.id][conditional]=GREATER_THAN&filters[Stat.id][values]=25</pre>
+	</li>
+	<li>
+		<p><strong>GREATER_THAN_OR_EQUAL_TO</strong> - Finds objects which have a value greater than or equal to the provided value.</p>
+		<p>Example: Retrieve conversions whose id is greater than or equal to 25</p>
+		<pre>&filters[Stat.id][conditional]=GREATER_THAN_OR_EQUAL_TO&filters[Stat.id][values]=25</pre>
+	</li>
+	<li>
+		<p><strong>LIKE</strong> - Returns objects which have a value that matches the provided string.  Use the '%' character as a wildcard.</p>
+		<p>Example: Retrieve conversions whose ip begins with the string "123.456.789"</p>
+		<pre>&filters[Stat.id][conditional]=LIKE&[Stat.id][values]=123.456.789%</pre>
+	</li>
+	<li>
+		<p><strong>NOT_LIKE</strong> - Returns objects which have a value that does not match the provided string.  Use the '%' character as a wildcard.</p>
+		<p>Example: Retrieve conversions whose ip does not end with with the string "543.210"</p>
+		<pre>&filters[Stat.id][conditional]=NOT_LIKE&[Stat.id][values]=%543.210</pre>
+	</li>
+	<li>
+		<p><strong>NULL</strong> - Finds objects which have a value that is NULL.  This is not the same as an empty string; you should use the EQUAL_TO conditional to find objects whose value is an empty string.  Notice no "values" are passed for this conditional.</p>
+		<p>Example: Retrieve conversions whose ip is NULL</p>
+		<pre>&filters[Stat.ip][conditional]=NULL</pre>
+	</li>
+	<li>
+		<p><strong>NOT_NULL</strong> - Finds objects which have a value that is NOT NULL.  This is not the same as an empty string; you should use the NOT_EQUAL_TO conditional to find objects whose value is an not an empty string.  Notice no "values" are passed for this conditional.</p>
+		<p>Example: Retrieve conversions whose ip is NOT NULL.</p>
+		<pre>&filters[Stat.ip][conditional]=NOT_NULL</pre>
+	</li>
+</ul>
+
+<p>* NOTE: Since the Report Filter does not support "TRUE" or "FALSE" conditionals, the "EQUAL_TO" or "NOT_EQUAL_TO"
+conditionals should be used instead when filtering on boolean-typed report fields.  A value of "1" corresponds to
+boolean true, while a value of "0" corresponds to boolean false.</p>

@@ -1,0 +1,17 @@
+<ul class="unstyled">
+
+    <li ng-repeat="containRelationship in arg.value">
+        <button ng-click="arg.value.splice($index, 1)"><i ng-show="arg.value[$index] != null" class="icon-trash close-image"></i></button>
+        <span><strong>{{containRelationship.modelAlias}}</strong></span> <a ng-show="arg.value != null" tooltip-html-unsafe="{{containRelationship.description}}" tooltip-append-to-body="true"><i class="icon-question-sign"></i></a>
+    </li>
+
+    <div ng-hide="getUnusedContainRelationships().length == 0">
+        <select class="input-large"
+                ng-model="newContainRelationship"
+                ng-change="addNewContainRelationship()"
+                ng-options="relationship.modelAlias for relationship in getUnusedContainRelationships() | orderBy:'modelAlias'">
+            <option value="">-- Choose a Contain --</option>
+        </select>
+    </div>
+
+</ul>

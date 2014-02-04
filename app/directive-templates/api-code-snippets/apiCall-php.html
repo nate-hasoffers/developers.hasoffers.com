@@ -1,0 +1,68 @@
+<div class="modal-header">
+	<h3>{{apiCallArgSet.method.target.name}} :: {{apiCallArgSet.method.name}}</h3>
+	<p>The following PHP Code executes an API call using current API Builder arguments.  Double click the code to highlight it.</p>
+</div>
+<div class="modal-body">
+<pre class="brush: php">
+	&lt;?php
+		// Specify API URL
+		define('HASOFFERS_API_URL', '{{apiCallArgSet.method.target.api.baseUrl}}json');
+
+		// Specify method arguments
+		$args = {{apiCallArgDictionary | HasObjToAssocPhpArrayFilter:2}};
+
+		// Initialize cURL
+		$curlHandle = curl_init();
+
+		// Configure cURL request
+		curl_setopt($curlHandle, CURLOPT_URL, HASOFFERS_API_URL{{apiCallArgSet.method.verb === 'GET' ? ' . \'?\' . http_build_query($args)' : ''}});
+{{apiCallArgSet.method.verb === 'POST' || apiCallArgSet.method.verb === 'PUT' ? '\n\t\t// Configure POST\n\t\tcurl_setopt($curlHandle, CURLOPT_POST, 1);\n\t\tcurl_setopt($curlHandle, CURLOPT_POSTFIELDS, http_build_query($args));\n' : ''}}
+		// Make sure we can access the response when we execute the call
+		curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
+
+		// Execute the API call
+		$jsonEncodedApiResponse = curl_exec($curlHandle);
+
+		// Ensure HTTP call was successful
+		if($jsonEncodedApiResponse === false) {
+			throw new \RuntimeException(
+				'API call failed with cURL error: ' . curl_error($curlHandle)
+			);
+		}
+
+		// Clean up the resource now that we're done with cURL
+		curl_close($curlHandle);
+
+		// Decode the response from a JSON string to a PHP associative array
+		$apiResponse = json_decode($jsonEncodedApiResponse, true);
+
+		// Make sure we got back a well-formed JSON string and that there were no
+		// errors when decoding it
+		$jsonErrorCode = json_last_error();
+		if($jsonErrorCode !== JSON_ERROR_NONE) {
+			throw new \RuntimeException(
+				'API response not well-formed (json error code: ' . $jsonErrorCode . ')'
+			);
+		}
+
+		// Print out the response details
+		if($apiResponse['response']['status'] === 1) {
+			// No errors encountered
+			echo 'API call successful';
+			echo PHP_EOL;
+			echo 'Response Data: ' . print_r($apiResponse['response']['data'], true);
+			echo PHP_EOL;
+		}
+		else {
+			// An error occurred
+			echo 'API call failed (' . $apiResponse['response']['errorMessage'] . ')';
+			echo PHP_EOL;
+			echo 'Errors: ' . print_r($apiResponse['response']['errors'], true);
+			echo PHP_EOL;
+		}
+
+</pre>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-warning" ng-click="close()">Close</button>
+</div>

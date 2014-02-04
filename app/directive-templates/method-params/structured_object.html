@@ -1,0 +1,33 @@
+<table class="table table-bordered">
+	<caption>The following fields can be provided.</caption>
+
+	<thead>
+	<tr>
+		<th>Field Name</th>
+		<th>Data Type</th>
+		<th>Description</th>
+		<th>Required</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	<tr ng-repeat="field in dataType.fields | orderBy:'name'">
+		<td>{{field.name}}</td>
+		<td>{{field.dataType}}</td>
+		<td>
+			<span ng-bind-html="field.description"></span>
+
+			<div ng-if="field.allowedValues != null">
+				<p>Allowed values:</p>
+				<ul>
+					<li ng-repeat="val in field.allowedValues">
+						{{val}}
+					</li>
+				</ul>
+
+			</div>
+		</td>
+		<td>{{field.required ? 'Yes' : 'No'}}</td>
+	</tr>
+	</tbody>
+</table>

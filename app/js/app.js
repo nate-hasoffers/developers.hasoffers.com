@@ -1,377 +1,113 @@
-(function(window) {
+/// <reference path="ts_defs/_all.d.ts"/>
+var DocApp;
+(function (DocApp) {
     'use strict';
-
-    var docModule = angular.module('Docs', ['ui.bootstrap.accordion']);
-    var apiCategories = {
-        brand: {
-            shortName: 'brand',
-            longName: 'Brand API'
-        },
-        affiliate: {
-            shortName: 'affiliate',
-            longName: 'Affiliate API'
-        }
-    };
-    var defaultApiCategory = apiCategories.brand;
-
-
-
-    /**
-     * Route configuration.
-     *
-     * @param {ng.$routeProvider} $routeProvider
-     */
-    docModule.config(function($routeProvider) {
-        $routeProvider.when('/:apiCategory',
-                {templateUrl: function(params) {
-                        return 'welcome-' + params.apiCategory + '.html';
-                    }
-                }
-            )
-            .when('/:apiCategory/controller/:controllerName',
-                {controller: ControllerListCtrl, templateUrl: 'controllerList.html'}
-            )
-            .when('/:apiCategory/controller/:controllerName/method/:methodName',
-                {controller: MethodViewCtrl, templateUrl: 'details.html'}
-            )
-            .otherwise({redirectTo: '/' + defaultApiCategory.shortName});
-    });
-
-
-    /**
-     * Globals Setup
-     *
-     * @param {ng.$rootScope} $rootScope
-     * @param {ng.$route} $route
-     * @param {ng.$location} $location
-     */
-    docModule.run(function($rootScope, $route, $location) {
-
-        $rootScope.apiCategories = apiCategories;
-
-        var validCategory = function(category) {
-            var valFound = false;
-
-            // check to see if val matches an apiCategory from object
-            angular.forEach($rootScope.apiCategories, function(categoryObject) {
-                if (categoryObject.shortName === category) {
-                    valFound = true;
-                }
-            });
-
-            return valFound;
+    var brandApi = { alias: 'brand', longName: 'Brand API' };
+    var affiliateApi = { alias: 'affiliate', longName: 'Affiliate API' };
+    // Disable the toolbar for SyntaxHighlighter whenever it's used
+    SyntaxHighlighter.defaults.toolbar = false;
+    // Create app
+    var app = angular.module('Docs', ['ngRoute', 'ngSanitize', 'ui.bootstrap']);
+    // Attach directives
+    app.directive('hasApiBuilder', DocApp.directives.HasApiBuilder);
+    app.directive('hasContainArg', DocApp.directives.HasContainArg);
+    app.directive('hasFieldDataArg', DocApp.directives.HasFieldDataArg);
+    app.directive('hasFieldArg', DocApp.directives.HasFieldArg);
+    app.directive('hasFieldsArg', DocApp.directives.HasFieldsArg);
+    app.directive('hasFilterArg', DocApp.directives.HasFilterArg);
+    app.directive('hasReportFilterArg', DocApp.directives.HasReportFilterArg);
+    app.directive('hasSortArg', DocApp.directives.HasSortArg);
+    app.directive('hasPrimitiveArg', DocApp.directives.HasPrimitiveArg);
+    app.directive('hasPrimitiveArrayArg', DocApp.directives.HasPrimitiveArrayArg);
+    app.directive('hasStructuredObjectArg', DocApp.directives.HasStructuredObjectArg);
+    app.directive('hasStructuredObjectArrayArg', DocApp.directives.HasStructuredObjectArrayArg);
+    app.directive('hasUnstructuredObjectArg', DocApp.directives.HasUnstructuredObjectArg);
+    app.directive('hasGetApiCodeButton', DocApp.directives.HasGetApiCodeButton);
+    app.directive('hasModelDetailsButton', DocApp.directives.HasModelDetailsButton);
+    app.directive('hasParamDataTypeDetailsButton', DocApp.directives.HasParamDataTypeDetailsButton);
+    // Attach services
+    app.service('DocRetriever', DocApp.services.DocRetriever);
+    app.service('DataTypeDescriber', DocApp.services.DataTypeDescriber);
+    app.service('UserInfo', DocApp.services.UserInfo);
+    app.service('HasModal', DocApp.services.HasModal);
+    // Attach filters
+    app.filter('HasApiTargetFilter', function () {
+        return function (targets, methodNamePartial) {
+            return DocApp.filters.HasApiTargetFilter.filter(targets, methodNamePartial);
         };
-
-        $rootScope.$on('$routeChangeStart', function(next, current) {
-
-            // redirect if unacceptaple apiCategory
-            if (!validCategory(current.params.apiCategory)) {
-                $location.path('/' + defaultApiCategory.shortName);
+    });
+    app.filter('HasApiMethodFilter', function () {
+        return function (methods, methodNamePartial) {
+            return DocApp.filters.HasApiMethodFilter.filter(methods, methodNamePartial);
+        };
+    });
+    app.filter('DecodeUriFilter', function () {
+        return function (url) {
+            return DocApp.filters.DecodeUriFilter.filter(url);
+        };
+    });
+    app.filter('HasObjToAssocPhpArrayFilter', function () {
+        return function (obj, indentation) {
+            return DocApp.filters.HasObjToAssocPhpArrayFilter.filter(obj, indentation);
+        };
+    });
+    app.filter('HasArgDictionaryToUrlParamStringFilter', function () {
+        return function (apiArgDictionary) {
+            return DocApp.filters.HasArgDictionaryToUrlParamStringFilter.filter(apiArgDictionary);
+        };
+    });
+    app.filter('HasFlattenArgDictionaryFilter', function () {
+        return function (apiArgDictionary) {
+            return DocApp.filters.HasFlattenArgDictionaryFilter.filter(apiArgDictionary);
+        };
+    });
+    // Attach controllers
+    app.controller('MethodView', DocApp.controllers.MethodView);
+    app.controller('ModelView', DocApp.controllers.ModelView);
+    app.controller('Sidebar', DocApp.controllers.Sidebar);
+    // Configure routes
+    app.config(function ($routeProvider) {
+        $routeProvider.when('/:api', {
+            templateUrl: function (params) {
+                return 'templates/' + params.api + '/welcome.html';
+            }
+        }).when('/:api/docs/:staticPage', {
+            templateUrl: function (params) {
+                return 'templates/' + params.api + '/' + params.staticPage + '.html';
+            }
+        }).when('/:api/controller/:targetName/method/:methodName', {
+            controller: 'MethodView',
+            templateUrl: 'templates/methodView.html',
+            resolve: DocApp.controllers.MethodView.resolve()
+        }).when('/:api/model/:modelName', {
+            controller: 'ModelView',
+            templateUrl: 'templates/modelView.html',
+            resolve: DocApp.controllers.ModelView.resolve()
+        }).otherwise({
+            redirectTo: '/' + brandApi.alias
+        });
+    });
+    // Run the application
+    app.run(function ($rootScope, $route, $location) {
+        // Set the brand and affiliate API identifiers
+        $rootScope.brandApi = brandApi;
+        $rootScope.affiliateApi = affiliateApi;
+        // No api selected initially
+        $rootScope.currentApi = null;
+        // Redirect to brand if specified api does not exist
+        $rootScope.$on('$routeChangeStart', function (next, current) {
+            if (current.params.api !== brandApi.alias && current.params.api !== affiliateApi.alias) {
+                $location.path('/' + brandApi.alias);
             }
         });
-
-        $rootScope.$on('$routeChangeSuccess', function(e, current, previous) {
-
-            // only broadcast or update apiCategory if is valid
-            if (validCategory(current.params.apiCategory)) {
-
-                var broadcastChange = $rootScope.apiCategory !== current.params.apiCategory;
-                
-                // set current category
-                $rootScope.apiCategory = current.params.apiCategory;
-
-                if (broadcastChange) {
-                    $rootScope.$broadcast('apiCategoryChange');
-                }
+        // Only broadcast api changes if the new api is valid and different
+        $rootScope.$on('$routeChangeSuccess', function (e, current, previous) {
+            var prevApi = $rootScope.currentApi;
+            $rootScope.currentApi = (current.params.api === brandApi.alias ? brandApi : affiliateApi);
+            if (prevApi !== $rootScope.currentApi) {
+                $rootScope.$broadcast('apiChange');
             }
         });
     });
-
-    /**
-     * Utility service
-     */
-    docModule.factory('Util', function($http, $rootScope) {
-        // Public methods:
-        return {
-            /**
-             * Gets documentation for external public facing controllers/methods.
-             *
-             * @return {ng.$HttpPromise}  A promise for the get request.
-             */
-            getExternalDoc: function() {
-                var externalDoc = ($rootScope.apiCategory === $rootScope.apiCategories.affiliate.shortName) ?
-                    'resource/Affiliate_doc.json' : 'resource/External_doc.json';
-                return $http.get(externalDoc, {cache: true});
-            },
-
-            /**
-             * Gets documentation for the models.
-             *
-             * @return {ng.$HttpPromise}  A promise for the get request.
-             */
-            getModelDoc: function() {
-                var externalDoc = ($rootScope.apiCategory === $rootScope.apiCategories.affiliate.shortName) ?
-                    'resource/Model_doc.json' : 'resource/Model_doc.json';
-                return $http.get(externalDoc, {cache: true});
-            },
-
-            /**
-             * Returns the method definition if one with a specified name is found in the specified
-             * controller.
-             *
-             * @param  {Array}   methods         List of methods to search.
-             * @param  {string}  controllerName  Controller in which to search for the method.
-             * @param  {string}  methodName      Name of the method to search for.
-             * @return {?Object}                 The method definition or null if not found.
-             */
-            findMethod: function(methods, controllerName, methodName) {
-                var searchFilters = {
-                    controllerName: controllerName,
-                    methodName: methodName
-                };
-
-                var result = methods.filter(function(value) {
-                    return (value.controllerName === this.controllerName &&
-                            value.methodName === this.methodName);
-                }, searchFilters);
-
-                if (result.length === 0) {
-                    return null;
-                }
-
-                return result[0];
-            },
-
-            /**
-             * Binds fields to be used with the method to the method object.
-             *
-             * @param  {Array.<Object>} models  Domain models.
-             * @param  {Object}         method  A method to bind fields to.
-             * @return {Object}                 The method passed in, with fields bound.
-             */
-            bindFields: function(models, method) {
-                 if (method.linkModel != null) {
-                     var searchFilter = {
-                         namespace: method.linkModel
-                     };
-
-                     var results = models.filter(function(value) {
-                         return (value.namespace === this.namespace);
-                     }, searchFilter);
-
-                     if (results.length !== 0) {
-                         method.fields = results[0].fields;
-                     }
-                 }
-
-                 return method;
-            },
-
-            /**
-             * Returns an array of details for a method's parameters, including the template to
-             * display their details to the user.
-             *
-             * @param  {Object}                  method  The method definition.
-             * @return {Array.<Object>}                  An array of details about each parameter
-             *                                           for the method.
-             */
-            buildApiConstructor: function(method) {
-
-                // remove 'contain' and 'fields' if viewing affiliate api
-                if ($rootScope.apiCategory === $rootScope.apiCategories.affiliate.shortName) {
-
-                    var filteredArr = [];
-                    angular.forEach(method.params, function(param) {
-                        if(param.name !== 'contain' && param.name !== 'fields') {
-                            filteredArr.push(param);
-                        }
-                    });
-                    method.params = filteredArr;
-                }
-
-                var paramObjects = {
-                    filters: {
-                        template: 'partials/filtersParam.html',
-                        nesting: {
-                            AND: 'AND',
-                            OR: 'OR'
-                        },
-                        operators: [
-                            {name: '=',     value: ''},
-                            {name: '!=',    value: 'NOT_EQUAL_TO'},
-                            {name: '<',     value: 'LESS_THAN'},
-                            {name: '<=',    value: 'LESS_THAN_OR_EQUAL_TO'},
-                            {name: '>',     value: 'GREATER_THAN'},
-                            {name: '>=',    value: 'GREATER_THAN_OR_EQUAL_TO'},
-                            {name: 'like',  value: 'LIKE'},
-                            {name: 'rlike', value: 'RLIKE'}
-                        ]
-                    },
-                    data: {
-                        template: 'partials/dataParam.html'
-                    },
-                    sort: {
-                        template: 'partials/sortParam.html',
-                        directions: ['ASC', 'DESC']
-                    },
-                    fields: {
-                        template: 'partials/fieldsParam.html'
-                    },
-                    field: {
-                        template: 'partials/fieldParam.html'
-                    },
-                    contain: {
-                        template: 'partials/containParam.html'
-                    },
-                    other: {
-                        template: 'partials/otherParam.html'
-                    }
-                };
-
-                var apiParams = [];
-                angular.forEach(method.params, function(param) {
-                    var paramType = paramObjects.other;
-                    if (paramObjects[param.name] != null) {
-                        paramType = paramObjects[param.name];
-                    }
-
-                    apiParams.push({
-                        value: param,
-                        type: paramType,
-                        parse: []
-                    });
-                });
-
-                return apiParams;
-            },
-
-            /**
-             * Returns all the methods in the specified controller.
-             *
-             * @param  {Array.<Object>}  methods        The methods to search in.
-             * @param  {string}          controllerName The name of the controller whose methods to
-             *                                          return.
-             * @return {?Array.<Object>}                The matching methods, or null if none found.
-             */
-            findMethodsByController: function(methods, controllerName) {
-                var searchFilters = {
-                    controllerName: controllerName
-                };
-
-                var result = methods.filter(function(value) {
-                    return (value.controllerName === this.controllerName);
-                }, searchFilters);
-
-                if (result.length === 0) {
-                    return null;
-                }
-
-                return result;
-            },
-
-            /**
-             * Groups a flat list of methods by controller.
-             * [{controllerName to methodNames},...]
-             *
-             * @param  {Array.<Object>} methods  List of methods.
-             * @return {Array.<Object>}          List of controllers with their methods nested.
-             */
-            aggregateByController: function(methods) {
-                var ctrlrs = {},
-                    ctrlrsArray = [],
-                    i = 0;
-
-                for (i; i < methods.length; i++) {
-                    var method = methods[i];
-
-                    if (ctrlrs[method.controllerName]) {
-                        ctrlrs[method.controllerName].push(method.methodName);
-                    }
-                    else {
-                        ctrlrs[method.controllerName] = [method.methodName];
-                    }
-                }
-
-                for (var controllerName in ctrlrs) {
-                    if (ctrlrs.hasOwnProperty(controllerName)) {
-                        ctrlrsArray.push({
-                            controllerName: controllerName,
-                            methods: ctrlrs[controllerName]
-                        });
-                    }
-                }
-
-                return ctrlrsArray;
-            }
-        };
-    });
-
-    /**
-     * A key/value storage service for user information, backed by localStorage.
-     */
-    docModule.factory('UserInfo', function() {
-        /**
-         * Returns user value set for the specified property in localStorage.
-         *
-         * @param  {string} key  The property whose value to get.
-         * @return {?*}          The value if set, or null if not set.
-         */
-        function getProperty(key) {
-            return window.localStorage.getItem(key);
-        }
-
-        /**
-         * Attempts to set a property for the user in localStorage.
-         * Silently fails if attempt to set property fails.
-         *
-         * @param {string} key    The name of the property to set.
-         * @param {*}      value  The value to set for the property.
-         */
-        function setProperty(key, value) {
-            try {
-                window.localStorage.setItem(key, value);
-            }
-            catch (e) {
-                // fail safe for QUOTA_EXCEEDED error
-            }
-        }
-
-        var hasLocalStorage = 'localStorage' in window && window.localStorage !== null;
-        // if we don't have local storage we will return an object
-        // that returns null for all it's methods
-        if (!hasLocalStorage) {
-            var nullFunc = function() { return null; };
-            return {
-                getProperty: nullFunc,
-                setProperty: nullFunc
-            };
-        }
-
-        return {
-            getProperty: getProperty,
-            setProperty: setProperty
-        };
-    });
-
-    /**
-     * Creates a filter (hasMethodFilter) that returns controllers which have a method whose name is
-     * a partial match.
-     */
-    docModule.filter('hasMethodFilter', [function() {
-        return function(controllers, methodNamePartial) {
-            if (methodNamePartial === '' || angular.isUndefined(methodNamePartial)) {
-                return controllers;
-            }
-
-            // filter controllers which don't have a method matching the partial
-            return controllers.filter(function(controller) {
-               // turn the array into a string and check if there is any
-               // partial instance of the method name in the string of method names
-               return controller.methods.join(' ')
-                   .toLowerCase()
-                   .match(methodNamePartial.toLowerCase());
-            });
-        };
-    }]);
-
-})(window);
+})(DocApp || (DocApp = {}));
+//# sourceMappingURL=app.js.map

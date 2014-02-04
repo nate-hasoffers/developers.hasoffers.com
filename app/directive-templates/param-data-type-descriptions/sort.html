@@ -1,0 +1,11 @@
+<p>Parameters of the Sort type used on get/find type functions to order the results returned by the method.  The
+	fields that can be sorted are limited to those of the model whose type the function returns.  The format of a
+	sort parameter is an object having keys identifying the model field name and values specifying the direction of
+	either "asc" or "desc" to order the results in ascending order or descending order, respectively.</p>
+
+<p>For example, an API method that has a "Sort" parameter named "sort" that returns Offer model objects could be called
+	in the following way to sort the results by Offer.status ascending and by Offer.id descending within each status.:</p>
+
+<pre>
+&sort[status]=asc&sort[id]=desc
+</pre>

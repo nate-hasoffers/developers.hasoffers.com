@@ -1,0 +1,37 @@
+<ul class="unstyled">
+    <li ng-repeat="fieldValue in arg.value">
+        <div style="white-space: nowrap;">
+            <button ng-click="arg.value.splice($index, 1)"><i ng-show="arg.value[$index].field != null" class="icon-trash close-image"></i></button> <span class="model-field-name"><strong>{{fieldValue.field.name}}</strong> <a tooltip-html-unsafe="{{fieldValue.field.description}}" tooltip-append-to-body="true"><i class="icon-question-sign"></i></a></span> =
+
+            <!-- handle booleans specially (just allow 1/0) -->
+			<span ng-if="fieldValue.field.dataType == 'boolean'">
+				<select ng-model="fieldValue.value"
+						ng-options="(val == 1 ? 'True' : 'False') for val in [1, 0]">
+				</select>
+			</span>
+
+			<span ng-if="fieldValue.field.dataType != 'boolean'">
+				<!-- drop-down if enum restriction on field, else regular text input -->
+				<select ng-show="fieldValue.field.allowedValues != null"
+						ng-model="fieldValue.value"
+						ng-options="val for val in fieldValue.field.allowedValues | orderBy: 'toString()'">
+				</select>
+
+				<input ng-show="fieldValue.field.allowedValues == null"
+					   class="input-large"
+					   type="text"
+					   ng-model="fieldValue.value"
+					   placeholder="{{fieldValue.field.dataType}}">
+			</span>
+        </div>
+    <li>
+
+    <li ng-show="getUnspecifiedFields().length > 0">
+        <select class="input-large"
+                ng-model="newField"
+                ng-change="addNewField()"
+                ng-options="field.name for field in getUnspecifiedFields() | orderBy:'name'">
+            <option value="">-- Choose a Field --</option>
+        </select>
+    </li>
+</ul>

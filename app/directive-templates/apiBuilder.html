@@ -1,0 +1,118 @@
+<dt>API Builder:</dt>
+<dd>
+    <div class="input-prepend network-token" ng-show="method.target.api.access === 'brand'">
+        <span class="add-on">
+            <abbr title="Is Required">NetworkToken</abbr>
+        </span>
+        <input type="text" class="input-large" ng-model="apiCallArgs.networkToken">
+    </div>
+
+    <div class="input-prepend affiliate-key" ng-show="method.target.api.access === 'affiliate'">
+        <span class="add-on">
+            <abbr title="Is Required">Affiliate API V3 Key</abbr>
+        </span>
+        <input type="text" class="input-large" ng-model="apiCallArgs.affiliateKey">
+    </div>
+
+    <div class="input-prepend network-id">
+        <span class="add-on">
+            <abbr title="Is Required">NetworkId</abbr>
+        </span>
+        <input type="text" class="input-large" ng-model="apiCallArgs.networkId">
+    </div>
+
+    <table class="table table-bordered api-builder-inputs" ng-show="apiCallArgs.methodSpecificArgs.length > 0">
+        <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="arg in apiCallArgs.methodSpecificArgs">
+                <td>
+                    <strong><span ng-show="arg.param.isRequired" class="label label-important required-indicator"><i class="icon-asterisk"></i></span> {{arg.param.name}}</strong>
+                    <div ng-show="arg.param.allowedDataTypes.length > 1">
+                        Choose Parameter Type:<br /><select ng-model="arg.selectedDataType"
+                                                       ng-change="resetArgValue(arg)"
+                                                       ng-options="DataTypeDescriber.getParamDataTypeDescription(dataType) for dataType in arg.param.allowedDataTypes">
+                        </select>
+                    </div>
+                </td>
+
+                <td>
+                    <div ng-switch="arg.selectedDataType.name" style="clear: both; padding-top: 2px;">
+                        <div ng-switch-when="@contain@">
+                            <div has-contain-arg arg="arg"></div>
+                        </div>
+                        <div ng-switch-when="@data@">
+                            <div has-field-data-arg arg="arg"></div>
+                        </div>
+                        <div ng-switch-when="@field@">
+                            <div has-field-arg arg="arg"></div>
+                        </div>
+                        <div ng-switch-when="@fields@">
+                            <div has-fields-arg arg="arg"></div>
+                        </div>
+                        <div ng-switch-when="@filter@">
+                            <div has-filter-arg arg="arg"></div>
+                        </div>
+						<div ng-switch-when="@report_filter@">
+							<div has-report-filter-arg arg="arg"></div>
+						</div>
+                        <div ng-switch-when="@sort@">
+                            <div has-sort-arg arg="arg"></div>
+                        </div>
+						<div ng-switch-when="@structured_object@">
+							<div has-structured-object-arg arg="arg"></div>
+						</div>
+						<div ng-switch-when="@structured_object_array@">
+							<div has-structured-object-array-arg arg="arg"></div>
+						</div>
+						<div ng-switch-when="@unstructured_object@">
+							<div has-unstructured-object-arg arg="arg"></div>
+						</div>
+                        <div ng-switch-when="integer">
+                            <div has-primitive-arg arg="arg"></div>
+                        </div>
+                        <div ng-switch-when="boolean">
+                            <div has-primitive-arg arg="arg"></div>
+                        </div>
+                        <div ng-switch-when="string">
+                            <div has-primitive-arg arg="arg"></div>
+                        </div>
+                        <div ng-switch-when="mixed">
+                            <div has-primitive-arg arg="arg"></div>
+                        </div>
+                        <div ng-switch-when="array">
+                            <div has-primitive-array-arg arg="arg"></div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</dd>
+
+<dd>
+    <button ng-hide="method.nonstandard != null" class="btn btn-primary" type="button" ng-click="runApiCall()">Run API Call</button>
+
+	<span has-get-api-code-button button-label="'Get Code'" api-call-arg-set="apiCallArgs" code-language="codeExampleLanguage"></span>
+	<label class="radio inline">
+		<input type="radio" ng-model="codeExampleLanguage" value="url" />HTTP URL
+	</label>
+	<label class="radio inline">
+		<input type="radio" ng-model="codeExampleLanguage" value="php" />PHP
+	</label>
+	<label class="radio inline">
+		<input type="radio" ng-model="codeExampleLanguage" value="curl" />cURL
+	</label>
+
+</dd>
+
+<dl ng-hide="apiResponse == null">
+    <dt>API Response</dt>
+    <dd>
+        <pre ng-class="{'alert error': apiError, 'loading' : responseLoading}">{{apiResponse}}</pre>
+    </dd>
+</dl>

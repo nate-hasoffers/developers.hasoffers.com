@@ -1,0 +1,19 @@
+<div class="modal-header">
+	<h3>{{apiCallArgSet.method.target.name}} :: {{apiCallArgSet.method.name}}</h3>
+	<p>The following cURL command executes an API call using current API Builder arguments.</p>
+</div>
+<div class="modal-body">
+
+<pre class="brush: plain" ng-if="apiCallArgSet.method.verb == 'GET'">
+curl "{{apiCallArgSet.method.target.api.baseUrl}}json?{{apiCallArgDictionary | HasArgDictionaryToUrlParamStringFilter}}"
+</pre>
+
+<pre class="brush: plain" ng-if="apiCallArgSet.method.verb == 'POST' || apiCallArgSet.method.verb == 'PUT'">
+curl "{{apiCallArgSet.method.target.api.baseUrl}}json" \
+<div ng-repeat="paramVal in flattenedApiCallDictionary">  -d {{paramVal.param}}="{{paramVal.val}}"{{$last ? '' : ' \\'}}</div>
+</pre>
+
+</div>
+<div class="modal-footer">
+	<button class="btn btn-warning" ng-click="close()">Close</button>
+</div>

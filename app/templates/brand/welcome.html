@@ -1,0 +1,70 @@
+<h1>Getting Started with the Brand API</h1>
+
+<h4>Requirements</h4>
+<ul>
+	<li>In order to use the API, your network must be on the Enterprise pricing plan or a Dedicated solution.</li>
+	<li>All requests require an API Key, which is a randomly generated string unique to your network.</li>
+	<li>IP address making request must have been submitted to the white-list for API access.</li>
+	<li>Additionally, all requests require your Network ID.</li>
+</ul>
+
+<h4>Creating an API Key</h4>
+<ul>
+	<li>API keys can be created from within the application:
+		<ul>
+			<li>Log into the application and hover over the Support tab in the Navigation Bar, and click on the "API" link from the drop-down.</li>
+			<li>If you don't already have an API Key there will be a notice underneath the Navigation Bar with a link to create one.</li>
+			<li>Once you've created one, the page will display your private API Key.  It will begin with the letters 'NET'.</li>
+		</ul>
+	</li>
+	<li>You can also talk to your Account Manager about creating and obtaining your API Key</li>
+</ul>
+
+<h4>While-list IP Address</h4>
+<ul>
+	<li>White-listing an IP address can be added from within the application:
+		<ul>
+			<li>Hover over the Support tab in the Navigation Bar and click on the API link from the drop-down.</li>
+			<li>There will be a box underneath your API Key to submit an IP address to whitelist.</li>
+		</ul>
+	</li>
+	<li>Additional IP addresses can be added to the while-list using the API method:  <a href="#/brand/controller/Application/method/whitelistNetworkApiIp">Application::whitelistNetworkApiIp</a></li>
+</ul>
+
+<h4>Making a Request</h4>
+<p>Your Network's API Key and Network ID are used to authenticate requests through the API.  Every API request must have a valid API Key and Network ID combination.  When making an API Request, use your API Key value for the <i>NetworkToken</i> parameter, and your Network ID for the <i>NetworkId</i> parameter.</p>
+
+<h4>Example Usage</h4>
+<ul>
+	<li>Network ID is <strong>demo</strong></li>
+	<li>API key is <strong>NETabc123</strong></li>
+	<li>Request is <a href="#/brand/controller/Offer/method/findById">Offer::findById</a></li>
+	<li>Offer ID is <strong>42</strong></li>
+	<li>Request URL:
+		<pre>https://api.hasoffers.com/Api/json?NetworkId=demo&NetworkToken=NETabc123&Target=Offer&Method=findById&id=42</pre>
+	</li>
+	<li>
+		Sample Response:
+		<pre>
+{
+  "request": {
+    ...collapsed JSON data
+  },
+  "response": {
+    "status": 1,
+    "httpStatus": 200,
+    "data": {
+      "Offer": {
+        "id": "42",
+        "name": "My Test Offer"
+      }
+    },
+    "errors": [],
+    "errorMessage": null
+  }
+}
+		</pre>
+	</li>
+</ul>
+
+
