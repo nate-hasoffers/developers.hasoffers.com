@@ -23,7 +23,7 @@ See the issue list (https://github.com/Adapp/developers.hasoffers.com/issues)
 - Fork the repository
 - Validate coding style:
     - npm install -g jshint
-    - jshint assets/js/
+    - jshint app/js/
 - Execute unit tests:
     - ./scripts/test.sh
     - ./scripts/e2e-test.sh
