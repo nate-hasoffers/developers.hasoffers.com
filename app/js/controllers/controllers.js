@@ -155,7 +155,7 @@
              * the user on the form.
              */
             $scope.updateApiCall = function() {
-                $scope.apiCall = 'http://api.hasoffers.com/v3/' +
+                $scope.apiCall = 'https://api.hasoffers.com/v3/' +
                     $scope.displayedMethod.controllerName +
                     '.json?Method=' + $scope.displayedMethod.methodName;
 
