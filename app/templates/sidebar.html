@@ -8,11 +8,6 @@
 		<accordion-group ng-init="docsOpen = true" is-open="docsOpen">
 			<accordion-heading><i class="glyphicon-small" ng-class="docsOpen ? 'icon-chevron-down' : 'icon-chevron-right'"></i> Documentation</accordion-heading>
 			<p><a href="#/{{currentApi.alias}}">Getting Started</a></p>
-
-			<div ng-show="currentApi === brandApi">
-				<p><a href="#/brand/docs/rate-limit">Rate Limiting</a></p>
-			</div>
-
 		</accordion-group>
 
 		<accordion-group is-open="modelsOpen">
