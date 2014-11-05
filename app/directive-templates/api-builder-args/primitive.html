@@ -1,0 +1,17 @@
+<div class="input-append" ng-show="arg.value != null">
+    <button ng-click="destroyValue()" type="button" class="btn"><i class="icon-trash"></i></button>
+    <span ng-if="arg.selectedDataType.name =='boolean'">
+		<select class="input-medium" ng-model="arg.value" ng-options="boolToStr(opt) for opt in [true, false]">
+		</select>
+    </span>
+	<span ng-if="arg.selectedDataType.name !='boolean'">
+		<input class="input-medium"
+			   type="text"
+			   ng-model="arg.value"
+			   placeholder="{{arg.selectedDataType.name}}" />
+	</span>
+</div>
+
+<div ng-show="arg.value == null">
+    <button ng-click="initializeValue()" type="button" class="btn"><i class="icon-plus"></i> Add</button>
+</div>

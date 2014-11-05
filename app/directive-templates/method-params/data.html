@@ -1,0 +1,17 @@
+<table class="table table-bordered">
+	<caption>The following fields from the <span has-model-details-button model="dataType.model"></span> model can be provided.</caption>
+
+	<thead>
+	<tr>
+		<th>Field Name</th>
+		<th>Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	<tr ng-repeat="field in dataType.model.fields | filter:{writable:true} | orderBy:'name'">
+		<td>{{field.name}}</td>
+		<td ng-bind-html="field.description"></td>
+	</tr>
+	</tbody>
+</table>

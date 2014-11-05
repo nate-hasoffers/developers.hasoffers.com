@@ -1,0 +1,12 @@
+<div class="modal-header">
+	<h3>{{apiCallArgSet.method.target.name}} :: {{apiCallArgSet.method.name}}</h3>
+	<p>The following HTTP URL executes an API call using current API Builder arguments.</p>
+</div>
+<div class="modal-body">
+	<pre class="brush: plain">
+{{apiCallArgSet.method.target.api.baseUrl}}json?{{apiCallArgDictionary | HasArgDictionaryToUrlParamStringFilter}}
+	</pre>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-warning" ng-click="close()">Close</button>
+</div>

@@ -1,0 +1,28 @@
+<ul class="unstyled">
+
+    <li ng-repeat="sortCombo in arg.value">
+        <button ng-click="arg.value.splice($index, 1)">
+            <i ng-show="sortCombo.field != null" class="icon-trash close-image"></i>
+        </button>
+
+        <span class="model-field-name">
+            <strong>{{sortCombo.field.name}}</strong>
+            <a ng-show="arg.value != null" tooltip-html-unsafe="{{sortCombo.field.description}}" tooltip-append-to-body="true"><i class="icon-question-sign"></i></a>
+        </span>
+
+        <select class="input-small"
+                ng-model="sortCombo.direction"
+                ng-options="direction for direction in ['asc', 'desc']">
+        </select>
+    <li>
+
+    <div ng-hide="getUnusedSortFields().length == 0">
+        <select class="input-large"
+                ng-model="newSortField"
+                ng-change="addNewSortField()"
+                ng-options="field.name for field in getUnusedSortFields() | orderBy:'name'">
+            <option value="">-- Choose a Field --</option>
+        </select>
+    </div>
+
+</ul>

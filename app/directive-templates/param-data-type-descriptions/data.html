@@ -1,0 +1,12 @@
+<p>A Data Object parameter type is used to provide a set of values for a model.  This parameter is typically used in
+	methods that create a new instance of a model or update the values for multiple fields of an existing model.  The
+	format is an object whose keys are the field names for the model with values for each being the value to set for
+	that field on the model.</p>
+
+<p>For example, an API method that has a "Data Object" parameter named "data" that is used to create Offer models
+	could be called in the following way to create an Offer with values set for the "name", "status", and "description"
+	fields:</p>
+
+<pre>
+&data[name]=TestOffer&data[status]=active&data[description]=TestDescription
+</pre>

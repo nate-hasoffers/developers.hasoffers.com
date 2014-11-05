@@ -1,0 +1,56 @@
+<ul class="breadcrumb">
+	<li>
+        <span>
+            <a href="#/{{currentApi.alias}}">{{currentApi.longName}}</a>
+        </span>
+
+		<span class="divider">/</span>
+	</li>
+
+	<li>
+		<span>{{vm.model.name}}</span>
+	</li>
+</ul>
+
+<dl>
+	<dt>Model</dt>
+	<dd>{{vm.model.name}}</dd>
+
+	<dt>Description</dt>
+	<dd>
+		<p ng-bind-html="vm.model.description"></p>
+	</dd>
+
+	<dt>
+		Fields
+	</dt>
+	<dd class="fields">
+		<table class="table table-bordered">
+			<thead>
+			<tr>
+				<th>Field</th>
+				<th>Type</th>
+				<th>Description</th>
+				<th>Nullable</th>
+			</tr>
+			</thead>
+
+			<tbody>
+			<tr ng-repeat="field in vm.model.fields">
+				<td>{{field.name}}</td>
+				<td>{{field.dataType}}</td>
+				<td>
+					<p ng-bind-html="field.description"></p>
+					<div ng-show="field.allowedValues != null">
+						Allowed values:
+						<ul>
+							<li ng-repeat="val in field.allowedValues">{{val}}</li>
+						</ul>
+					</div>
+				</td>
+				<td>{{field.nullable ? 'Yes' : 'No'}}</td>
+			</tr>
+			</tbody>
+		</table>
+	</dd>
+</dl>

@@ -1,0 +1,84 @@
+<p>Parameters of the Filter type allow the caller of an API method to restrict the results returned by the method to
+those which meet certain criteria.  Fields that can be filtered are limited to those of the model whose type the function
+returns.</p>
+
+<p>The default operator for filters is an equality filter that limits results to those models with a field matching a
+single value or one of a list of values.  For example, if you wish to retrieve Offers whose status is "active" and whose
+currency is "USD" the following filters could be used:</p>
+
+<pre>&filters[status]=active&filters[currency]=USD</pre>
+
+<p>Since the default operator supports an array of values to achieve the effect of "is one of", we can update our example
+to return Offers whose status is "paused" in addition to those which are "active" by using the parameter array notation
+"[]" to denote a list of statuses:</p>
+
+<pre>&filters[status][]=active&filters[status][]=paused&filters[currency]=USD</pre>
+
+<p>The default behavior for filters is to "AND" the conditions together, so that results must meet the criteria of each
+filter in order to match.  It is also possible to construct a filter that "OR"s the conditions together.  For example,
+if we wish to retrieve Offers whose status is "active" OR whose currency is "USD" we could construct a filter by prefixing
+each field with an "[OR]" block:</p>
+
+<pre>&filters[OR][status]=active&filters[OR][currency]=USD</pre>
+
+<p>In addition to the default equality operator, following are additional comparison operators that can be used to limit
+results with a filter.  NOTE: They are limited to comparing against a single value, rather than a list like the default
+operator.</p>
+
+<ul>
+	<li>
+		<p><strong>NOT_EQUAL_TO</strong> - Finds objects which do not have the provided value.</p>
+		<p>Example: Retrieve Offers whose status is not equal to "active"</p>
+		<pre>&filters[status][NOT_EQUAL_TO]=active</pre>
+	</li>
+	<li>
+		<p><strong>LESS_THAN</strong> - Finds objects which have a value less than the provided value.</p>
+		<p>Example: Retrieve Offers whose id is less than 25</p>
+		<pre>&filters[id][LESS_THAN]=25</pre>
+	</li>
+	<li>
+		<p><strong>LESS_THAN_OR_EQUAL_TO</strong> - Finds objects which have a value less than or equal to the provided value.</p>
+		<p>Example: Retrieve Offers whose id is less than or equal to 25</p>
+		<pre>&filters[id][LESS_THAN_OR_EQUAL_TO]=25</pre>
+	</li>
+	<li>
+		<p><strong>GREATER_THAN</strong> - Finds objects which have a value greater than the provided value.</p>
+		<p>Example: Retrieve Offers whose id is greater 25</p>
+		<pre>&filters[id][GREATER_THAN]=25</pre>
+	</li>
+	<li>
+		<p><strong>GREATER_THAN_OR_EQUAL_TO</strong> - Finds objects which have a value greater than or equal to the provided value.</p>
+		<p>Example: Retrieve Offers whose id is greater than or equal to 25</p>
+		<pre>&filters[id][GREATER_THAN_OR_EQUAL_TO]=25</pre>
+	</li>
+	<li>
+		<p><strong>LIKE</strong> - Returns objects which have a value that matches the provided string.  Use the '%' character as a wildcard.</p>
+		<p>Example: Retrieve Offers whose name begins with the string "Test"</p>
+		<pre>&filters[name][LIKE]=Test%</pre>
+	</li>
+	<li>
+		<p><strong>NOT_LIKE</strong> - Returns objects which have a value that does not match the provided string.  Use the '%' character as a wildcard.</p>
+		<p>Example: Retrieve Offers whose name does not end with with the string "Test"</p>
+		<pre>&filters[name][NOT_LIKE]=%Test</pre>
+	</li>
+	<li>
+		<p><strong>NULL</strong> - Finds objects which have a value that is NULL.  This is not the same as an empty string; you should use the EQUAL_TO conditional to find objects whose value is an empty string.</p>
+		<p>Example: Retrieve Offers whose description is NULL</p>
+		<pre>&filters[description][NULL]=1</pre>
+	</li>
+	<li>
+		<p><strong>NOT_NULL</strong> - Finds objects which have a value that is NOT NULL.  This is not the same as an empty string; you should use the NOT_EQUAL_TO conditional to find objects whose value is an not an empty string.</p>
+		<p>Example: Retrieve Offers whose description is NOT NULL.</p>
+		<pre>&filters[description][NOT_NULL]=1</pre>
+	</li>
+	<li>
+		<p><strong>TRUE</strong> - Finds objects which have a value that is the boolean true.</p>
+		<p>Example: Retrieve Offers which are private</p>
+		<pre>&filters[is_private][TRUE]=1</pre>
+	</li>
+	<li>
+		<p><strong>FALSE</strong> - Finds objects which have a value that is the boolean false.</p>
+		<p>Example: Retrieve Offers which are not private</p>
+		<pre>&filters[is_private][FALSE]=1</pre>
+	</li>
+</ul>

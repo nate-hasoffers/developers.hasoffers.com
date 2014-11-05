@@ -1,0 +1,49 @@
+<p>Parameters of the Contain data type are used to bind one or more related objects to the base response type of the API call.  This is similar to the way relational database "joins" work.</p>
+
+<p>For example, when making a call to a function like "Offer::findById" that has a Contain parameter named "contain" which supports containing with a model aliased "Country" and "OfferGroup", an API call to include both those related objects along with the Offer having id=100 would include the following querystring:</p>
+
+<pre>
+&Target=Offer&Method=findAll&id=100&contain[]=Country&contain[]=OfferGroup
+</pre>
+
+<p>The API response will now contain the Offer as well any related Country and OfferGroup values that were found for it.</p>
+
+<p>A response for the example might look something like the following: </p>
+
+<pre>
+{
+	"response": {
+		"status": 1,
+		"data": {
+			"100": {
+				Offer: {
+					"id": "100",
+					"name": "Test Offer",
+					"status": "active",
+					... (other Offer fields) ...
+				},
+				OfferGroup: {
+					"25": {
+						"id": "25",
+						"name": "Some Offer Group"
+					},
+					"71": {
+						"id": "71",
+						"name": "Another Offer Group"
+					}
+				}
+				Country: {
+					"US": {
+						"name": "United States",
+						"code": "US"
+					},
+					"CA": {
+						"name": "Canada",
+						"code": "CA"
+					}
+				}
+			}
+		}
+	}
+}
+</pre>

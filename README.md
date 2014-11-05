@@ -1,30 +1,4 @@
 # developers.hasoffers.com
+Documentation for the HasOffers Brand and Affiliate APIs.
 
-[![Build Status](https://travis-ci.org/Adapp/developers.hasoffers.com.png)](https://travis-ci.org/Adapp/developers.hasoffers.com)
-
-This is a HasOffers API resource built with [angularjs][angularjs].
-
-All submissions are welcome. To submit a change, fork this repo, commit your changes, and send us a [pull request](http://help.github.com/send-pull-requests/).
-
-## Setup
-Just fork the repo, run:
-
-- node scripts/web-server.js
-- navigate to http://localhost:8000/app/index.html
-
-Simple :)
-
-[angularjs]: http://angularjs.org/
-
-## TODO
-See the issue list (https://github.com/Adapp/developers.hasoffers.com/issues)
-
-## How to contribute
-- Fork the repository
-- Validate coding style:
-    - npm install -g jshint
-    - jshint app/js/
-- Execute unit tests:
-    - ./scripts/test.sh
-    - ./scripts/e2e-test.sh
-- Send in a pull request
+The application is written with Angular.js (Version 1.2.11) and Typescript (Version 1.1.0.1).  Edit the `app/ts/*.ts` files and compile the output to the app/js directory.

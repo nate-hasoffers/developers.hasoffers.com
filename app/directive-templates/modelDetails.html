@@ -1,0 +1,45 @@
+<div class="modal-header">
+    <h3>{{model.name}}</h3>
+    <p>{{model.description}}</p>
+</div>
+<div class="modal-body">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Nullable</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr ng-repeat="field in model.fields">
+                <td>{{field.name}}</td>
+                <td>{{field.dataType}}</td>
+                <td>
+                    <p ng-bind-html="field.description"></p>
+                    <div ng-if="field.allowedValues != null">
+                        Allowed values:
+                        <ul>
+                            <li ng-repeat="val in field.allowedValues">{{val}}</li>
+                        </ul>
+                    </div>
+					<div ng-if="field.synthetic == true">
+						<strong>This field cannot be used in parameters for the purpose of filtering, sorting, or limiting the fields returned.</strong>
+					</div>
+					<div ng-if="field.defaultValue != null">
+						Default Value: {{field.defaultValue}}
+					</div>
+					<div ng-if="field.runtimeDefault != null">
+						A default value is set for this field: {{field.runtimeDefault}}
+					</div>
+                </td>
+                <td>{{field.nullable ? 'Yes' : 'No'}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-warning" ng-click="close()">Close</button>
+</div>

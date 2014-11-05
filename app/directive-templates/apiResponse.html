@@ -1,0 +1,15 @@
+<div class="modal-header">
+	<h3>{{apiCallArgs.method.target.name}} :: {{apiCallArgs.method.name}}</h3>
+	<p>API Response</p>
+</div>
+<div class="modal-body">
+	<div ng-show="loading">
+		Loading... <img src="img/loading.gif" />
+	</div>
+	<div ng-show="!loading">
+		<pre>{{apiResponse}}</pre>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-warning" ng-click="close()">Close</button>
+</div>
