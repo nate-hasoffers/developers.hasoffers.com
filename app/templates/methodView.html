@@ -25,8 +25,8 @@
 			This method is nonstandard, so the API call cannot be run directly below.  The provided code examples may require modification in order to call this method.  Explanation: <ul><li>{{vm.method.nonstandard}}</li></ul>
 		</div>
 
-        <p>{{vm.method.shortDescription}}</p>
-        <p>{{vm.method.longDescription}}</p>
+        <p ng-bind-html="vm.method.shortDescription"></p>
+        <p ng-bind-html="vm.method.longDescription"></p>
     </dd>
 
     <dt>
