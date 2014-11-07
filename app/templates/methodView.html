@@ -102,10 +102,13 @@
 							<div ng-default>
 								<!-- primitives may specify a whitelist of allowed values -->
 								<div ng-if="dataType.allowedValues != null">
-									<p>Allowed values:</p>
-									<ul>
-										<li ng-repeat="val in dataType.allowedValues">{{val}}</li>
-									</ul>
+									<a ng-click="expanded = !expanded" href="javascript:void(0);">{{expanded ? 'Hide' : 'Show'}} valid values</a>
+									<div ng-show="expanded" class="embedded-param-details">
+										<p>Allowed values:</p>
+										<ul>
+											<li ng-repeat="val in dataType.allowedValues">{{val}}</li>
+										</ul>
+									</div>
 								</div>
 							</div>
 						</div>
