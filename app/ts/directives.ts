@@ -652,12 +652,17 @@ module DocApp.directives {
 
         // Function to initialize a value so that the input will show
         scope.initializeValue = (): void => {
-          // Booleans initialize to true, all else empty strings
           if(scope.arg.selectedDataType.name === 'boolean') {
+            // Booleans initialize to true
             scope.arg.value = true;
           }
-          else {
+          else if(scope.arg.selectedDataType.allowedValues == null) {
+            // Free-form primitives empty string
             scope.arg.value = '';
+          }
+          else {
+            // If this field has set values, select the first
+            scope.arg.value = scope.arg.selectedDataType.allowedValues[0];
           }
         };
 
@@ -678,7 +683,8 @@ module DocApp.directives {
   // Primitive array arg (array of primitives)
   interface IHasPrimitiveArrayArgScope extends ng.IScope {
     arg: DocApp.domain.methodArgs.IPrimitiveArrayArg;
-    initializeValue: () => void;
+    addNewValue: (any) => void;
+    getUnusedAllowedValues: () => any[];
     destroyValue: (valIndex: number) => void;
   }
   export function HasPrimitiveArrayArg(): ng.IDirective {
@@ -691,9 +697,21 @@ module DocApp.directives {
         scope.arg.defaultValue = [];
         scope.arg.value = [];
 
-        // Function to initialize a value so that a new input will show
-        scope.initializeValue = (): void => {
-          scope.arg.value.push('');
+        // Function to return any valid values that haven't been used
+        scope.getUnusedAllowedValues = (): any[] => {
+            var unusedAllowedValues = [];
+            if(scope.arg.selectedDataType.allowedValues != null) {
+                unusedAllowedValues = _.difference(
+                    scope.arg.selectedDataType.allowedValues,
+                    scope.arg.value
+                );
+            }
+            return unusedAllowedValues;
+        };
+
+        // Function to add a new value to the arg
+        scope.addNewValue = (val: any) => {
+            scope.arg.value.push(val);
         };
 
         // Function to destroy a value at a specified index

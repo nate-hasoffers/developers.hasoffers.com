@@ -99,6 +99,15 @@
 								<a ng-click="expanded = !expanded" href="javascript:void(0);">{{expanded ? 'Hide' : 'Show'}} valid fields</a>
 								<div ng-show="expanded" class="embedded-param-details" ng-include="'directive-templates/method-params/structured_object_array.html'"></div>
 							</div>
+							<div ng-default>
+								<!-- primitives may specify a whitelist of allowed values -->
+								<div ng-if="dataType.allowedValues != null">
+									<p>Allowed values:</p>
+									<ul>
+										<li ng-repeat="val in dataType.allowedValues">{{val}}</li>
+									</ul>
+								</div>
+							</div>
 						</div>
 					</div>
 

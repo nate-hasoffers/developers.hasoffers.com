@@ -79,6 +79,7 @@ module DocApp.domain {
   export module paramDataTypes {
     export interface IParamDataType {
       name: string;
+      allowedValues?: any[]
     }
 
     // Primitive data types are just a name (integer, mixed, double, etc)

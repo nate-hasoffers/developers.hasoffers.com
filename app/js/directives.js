@@ -481,12 +481,17 @@ var DocApp;
                     scope.arg.value = scope.arg.defaultValue = null;
                     // Function to initialize a value so that the input will show
                     scope.initializeValue = function () {
-                        // Booleans initialize to true, all else empty strings
                         if (scope.arg.selectedDataType.name === 'boolean') {
+                            // Booleans initialize to true
                             scope.arg.value = true;
                         }
-                        else {
+                        else if (scope.arg.selectedDataType.allowedValues == null) {
+                            // Free-form primitives empty string
                             scope.arg.value = '';
+                        }
+                        else {
+                            // If this field has set values, select the first
+                            scope.arg.value = scope.arg.selectedDataType.allowedValues[0];
                         }
                     };
                     // Helper function to stringify booleans
@@ -510,9 +515,17 @@ var DocApp;
                     // Initialize value and default
                     scope.arg.defaultValue = [];
                     scope.arg.value = [];
-                    // Function to initialize a value so that a new input will show
-                    scope.initializeValue = function () {
-                        scope.arg.value.push('');
+                    // Function to return any valid values that haven't been used
+                    scope.getUnusedAllowedValues = function () {
+                        var unusedAllowedValues = [];
+                        if (scope.arg.selectedDataType.allowedValues != null) {
+                            unusedAllowedValues = _.difference(scope.arg.selectedDataType.allowedValues, scope.arg.value);
+                        }
+                        return unusedAllowedValues;
+                    };
+                    // Function to add a new value to the arg
+                    scope.addNewValue = function (val) {
+                        scope.arg.value.push(val);
                     };
                     // Function to destroy a value at a specified index
                     scope.destroyValue = function (valIndex) {
