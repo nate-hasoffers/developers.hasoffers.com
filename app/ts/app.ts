@@ -133,7 +133,8 @@ module DocApp {
   // Run the application
   app.run( ($rootScope: IAppRootScopeService,
             $route: ng.route.IRouteProvider,
-            $location: ng.ILocationService) => {
+            $location: ng.ILocationService,
+            $anchorScroll: ng.IAnchorScrollService) => {
 
     // Set the brand and affiliate API identifiers
     $rootScope.brandApi = brandApi;
@@ -151,6 +152,9 @@ module DocApp {
 
     // Only broadcast api changes if the new api is valid and different
     $rootScope.$on('$routeChangeSuccess', (e, current: {params: {api: string}}, previous) => {
+      // Scroll to top on change
+      $anchorScroll();
+
       var prevApi = $rootScope.currentApi;
       $rootScope.currentApi = (current.params.api === brandApi.alias ? brandApi : affiliateApi);
 
