@@ -40,18 +40,6 @@ module DocApp {
   app.service('HasModal', services.HasModal);
 
   // Attach filters
-  app.filter('HasApiTargetFilter', () => {
-      return (targets: DocApp.domain.IApiTarget[], methodNamePartial: string) => {
-        return filters.HasApiTargetFilter.filter(targets, methodNamePartial);
-      }
-    }
-  );
-  app.filter('HasApiMethodFilter', () => {
-      return (methods: DocApp.domain.IApiMethod[], methodNamePartial: string) => {
-        return filters.HasApiMethodFilter.filter(methods, methodNamePartial);
-      }
-    }
-  );
   app.filter('DecodeUriFilter', () => {
       return (url) => { return filters.DecodeUriFilter.filter(url);  }
     }

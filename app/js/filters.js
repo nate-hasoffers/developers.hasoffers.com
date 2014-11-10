@@ -4,40 +4,6 @@ var DocApp;
     var filters;
     (function (filters) {
         'use strict';
-        // A filter that returns targets which have a method whose name is a partial match.
-        var HasApiTargetFilter = (function () {
-            function HasApiTargetFilter() {
-            }
-            HasApiTargetFilter.filter = function (targets, methodNamePartial) {
-                // Returns all targets if no query filter provided
-                if (methodNamePartial == null || methodNamePartial === '') {
-                    return targets;
-                }
-                // Returns targets which have methods whose names are a partial match for the provided substring.
-                return _.filter(targets, function (target) {
-                    return HasApiMethodFilter.filter(target.methods, methodNamePartial).length > 0;
-                });
-            };
-            return HasApiTargetFilter;
-        })();
-        filters.HasApiTargetFilter = HasApiTargetFilter;
-        // A filter that returns methods whose names are a partial match for a provided substring.
-        var HasApiMethodFilter = (function () {
-            function HasApiMethodFilter() {
-            }
-            HasApiMethodFilter.filter = function (methods, methodNamePartial) {
-                // Returns all methods if no query filter provided
-                if (methodNamePartial == null || methodNamePartial === '') {
-                    return methods;
-                }
-                // Limit to methods whose names match the query
-                return _.filter(methods, function (method) {
-                    return method.name.toLowerCase().match(methodNamePartial.toLowerCase()) != null;
-                });
-            };
-            return HasApiMethodFilter;
-        })();
-        filters.HasApiMethodFilter = HasApiMethodFilter;
         // Filter to allow decoded URIs to be displayed.
         var DecodeUriFilter = (function () {
             function DecodeUriFilter() {

@@ -6,22 +6,75 @@ var DocApp;
         'use strict';
         // Controller for a list of sidebar with targets and methods.
         var Sidebar = (function () {
-            function Sidebar($scope, DocRetriever) {
+            function Sidebar($scope, DocRetriever, $sce) {
                 var _this = this;
                 this.DocRetriever = DocRetriever;
+                this.$sce = $sce;
                 this.methodSearchQuery = '';
                 this.modelSearchQuery = '';
+                this.methodsOpen = true;
+                this.modelsOpen = false;
                 // Store instance of class in scope
                 $scope.vm = this;
-                // Whenever the api changes we need to update the sidebar to reflect the new targets/models/methods
-                $scope.$on('apiChange', function () {
+                // Function to initialize the sidebar with the current API models/targets
+                var updateSidebar = function () {
                     DocRetriever.getApiDefinition($scope.currentApi.alias).then(function (apiDef) {
                         _this.api = apiDef;
                         _this.methodSearchQuery = '';
                         _this.modelSearchQuery = '';
                     });
-                });
+                };
+                // Initialize the sidebar (in the event the API was set already before Sidebar constructed)
+                if ($scope.currentApi != null) {
+                    updateSidebar();
+                }
+                // Whenever the api changes we need to update the sidebar to reflect the new targets/models/methods
+                $scope.$on('apiChange', updateSidebar);
             }
+            // Returns an subset of the provided Methods which match the current search string.
+            Sidebar.prototype.getMatchingMethods = function (methods) {
+                var _this = this;
+                return _.filter(methods, function (method) {
+                    return _this.isSubstring(method.name, _this.methodSearchQuery);
+                });
+            };
+            // Returns the number of Methods that are visible for the specified Target (depends on the search string)
+            Sidebar.prototype.getNumVisibleMethods = function (target) {
+                // If Target name is matched, all visible
+                if (this.methodSearchQuery == '' || this.isSubstring(target.name, this.methodSearchQuery)) {
+                    return target.methods.length;
+                }
+                return this.getMatchingMethods(target.methods).length;
+            };
+            // Returns whether or not the needle (case insensitive) is found int he haystack (case insensitive).
+            Sidebar.prototype.isSubstring = function (haystack, needle) {
+                return haystack.toLowerCase().match(needle.toLowerCase()) != null;
+            };
+            // Takes a haystack and needle, and returns a HTML string of the haystack with the needle highlighted.
+            Sidebar.prototype.highlightSubString = function (haystack, needle) {
+                // Make sure a non-empty needle specified
+                if (needle == '') {
+                    return haystack;
+                }
+                // Look for the needle in the haystack
+                var substrLocation = haystack.toLowerCase().indexOf(needle.toLowerCase());
+                if (substrLocation < 0) {
+                    // Not found in haystack
+                    return haystack;
+                }
+                // Highlight the needle
+                var highlightedString = haystack.substr(0, substrLocation) + '<span class="hs">' + haystack.substr(substrLocation, needle.length) + '</span>' + haystack.substr(substrLocation + needle.length);
+                return this.$sce.trustAsHtml(highlightedString);
+            };
+            // Returns whether or not the specified Target should be shown, given the current search query.
+            Sidebar.prototype.showTarget = function (target) {
+                return this.methodSearchQuery == '' || this.isSubstring(target.name, this.methodSearchQuery) || this.getMatchingMethods(target.methods).length > 0;
+            };
+            // Returns whether or not the specified Method should be shown, given the current search query.
+            Sidebar.prototype.showMethod = function (method) {
+                // A method should be shown if there is no search query, or if its Target matches, or if the Method name matches.
+                return this.methodSearchQuery == '' || this.isSubstring(method.target.name, this.methodSearchQuery) || this.isSubstring(method.name, this.methodSearchQuery);
+            };
             return Sidebar;
         })();
         controllers.Sidebar = Sidebar;

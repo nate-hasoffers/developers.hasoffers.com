@@ -228,3 +228,21 @@ div.object-array-group ul {
     margin: 5px;
     border: 2px solid #ccc;
 }
+
+li.filter-item-match {
+    font-weight: bolder;
+}
+li.filter-item-match:before {
+    content: "* "
+}
+span.hs {
+    text-decoration: underline;
+    text-decoration-color: red;
+    -moz-text-decoration-color: red;
+    color: #FF9999;
+}
+
+span.ul {
+    text-decoration: underline;
+    color: #0088cc;
+}

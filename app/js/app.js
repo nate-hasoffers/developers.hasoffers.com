@@ -31,16 +31,6 @@ var DocApp;
     app.service('UserInfo', DocApp.services.UserInfo);
     app.service('HasModal', DocApp.services.HasModal);
     // Attach filters
-    app.filter('HasApiTargetFilter', function () {
-        return function (targets, methodNamePartial) {
-            return DocApp.filters.HasApiTargetFilter.filter(targets, methodNamePartial);
-        };
-    });
-    app.filter('HasApiMethodFilter', function () {
-        return function (methods, methodNamePartial) {
-            return DocApp.filters.HasApiMethodFilter.filter(methods, methodNamePartial);
-        };
-    });
     app.filter('DecodeUriFilter', function () {
         return function (url) {
             return DocApp.filters.DecodeUriFilter.filter(url);
