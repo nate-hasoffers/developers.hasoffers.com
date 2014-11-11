@@ -40,18 +40,6 @@ module DocApp {
   app.service('HasModal', services.HasModal);
 
   // Attach filters
-  app.filter('HasApiTargetFilter', () => {
-      return (targets: DocApp.domain.IApiTarget[], methodNamePartial: string) => {
-        return filters.HasApiTargetFilter.filter(targets, methodNamePartial);
-      }
-    }
-  );
-  app.filter('HasApiMethodFilter', () => {
-      return (methods: DocApp.domain.IApiMethod[], methodNamePartial: string) => {
-        return filters.HasApiMethodFilter.filter(methods, methodNamePartial);
-      }
-    }
-  );
   app.filter('DecodeUriFilter', () => {
       return (url) => { return filters.DecodeUriFilter.filter(url);  }
     }
@@ -145,7 +133,8 @@ module DocApp {
   // Run the application
   app.run( ($rootScope: IAppRootScopeService,
             $route: ng.route.IRouteProvider,
-            $location: ng.ILocationService) => {
+            $location: ng.ILocationService,
+            $anchorScroll: ng.IAnchorScrollService) => {
 
     // Set the brand and affiliate API identifiers
     $rootScope.brandApi = brandApi;
@@ -163,6 +152,9 @@ module DocApp {
 
     // Only broadcast api changes if the new api is valid and different
     $rootScope.$on('$routeChangeSuccess', (e, current: {params: {api: string}}, previous) => {
+      // Scroll to top on change
+      $anchorScroll();
+
       var prevApi = $rootScope.currentApi;
       $rootScope.currentApi = (current.params.api === brandApi.alias ? brandApi : affiliateApi);
 

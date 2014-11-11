@@ -3,36 +3,6 @@
 module DocApp.filters {
   'use strict';
 
-  // A filter that returns targets which have a method whose name is a partial match.
-  export class HasApiTargetFilter {
-    static filter(targets: DocApp.domain.IApiTarget[], methodNamePartial: string) {
-      // Returns all targets if no query filter provided
-      if(methodNamePartial == null || methodNamePartial === '' ) {
-        return targets;
-      }
-
-      // Returns targets which have methods whose names are a partial match for the provided substring.
-      return _.filter(targets, (target: DocApp.domain.IApiTarget) => {
-        return HasApiMethodFilter.filter(target.methods, methodNamePartial).length > 0;
-      });
-    }
-  }
-
-  // A filter that returns methods whose names are a partial match for a provided substring.
-  export class HasApiMethodFilter {
-    static filter(methods: DocApp.domain.IApiMethod[], methodNamePartial: string) {
-      // Returns all methods if no query filter provided
-      if(methodNamePartial == null || methodNamePartial === '') {
-        return methods;
-      }
-
-      // Limit to methods whose names match the query
-      return _.filter(methods, (method: DocApp.domain.IApiMethod) => {
-        return method.name.toLowerCase().match(methodNamePartial.toLowerCase()) != null;
-      });
-    }
-  }
-
   // Filter to allow decoded URIs to be displayed.
   export class DecodeUriFilter {
     static filter(url) {

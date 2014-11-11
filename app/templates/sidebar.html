@@ -1,4 +1,4 @@
-<div ng-controller="Sidebar">
+<div ng-controller="Sidebar" ng-show="vm.api != null">
     <div class="btn-group row-fluid">
         <a ng-class="{active: currentApi == affiliateApi}" class="btn span6"  href="#/{{affiliateApi.alias}}">{{affiliateApi.longName}}</a>
         <a ng-class="{active: currentApi == brandApi}" class="btn span6"  href="#/{{brandApi.alias}}">{{brandApi.longName}}</a>
@@ -10,28 +10,29 @@
 			<p><a href="#/{{currentApi.alias}}">Getting Started</a></p>
 		</accordion-group>
 
-		<accordion-group is-open="modelsOpen">
+		<accordion-group is-open="vm.modelsOpen">
 			<accordion-heading><i class="glyphicon-small" ng-class="modelsOpen ? 'icon-chevron-down' : 'icon-chevron-right'"></i> Models</accordion-heading>
 			<input type="text" class="search-query span12" ng-model="vm.modelSearchQuery" placeholder="Search Models">
 			<ul class="model-list">
 				<li ng-repeat="model in vm.api.models | filter:{name:vm.modelSearchQuery} | orderBy:'name'">
-					<a href="#/{{currentApi.alias}}/model/{{model.name}}">{{model.name}}</a>
+					<a href="#/{{currentApi.alias}}/model/{{model.name}}" ng-bind-html="vm.highlightSubString(model.name, vm.modelSearchQuery)"></a>
 				</li>
 			</ul>
 		</accordion-group>
 
-		<accordion-group is-open="methodsOpen">
-			<accordion-heading><i class="glyphicon-small" ng-class="methodsOpen ? 'icon-chevron-down' : 'icon-chevron-right'"></i> Methods</accordion-heading>
-			<input type="text" class="search-query span12" ng-model="vm.methodSearchQuery" placeholder="Search Methods">
+		<accordion-group is-open="vm.methodsOpen">
+			<accordion-heading><i class="glyphicon-small" ng-class="vm.methodsOpen ? 'icon-chevron-down' : 'icon-chevron-right'"></i> Methods</accordion-heading>
+			<input type="text" class="search-query span12" ng-model="vm.methodSearchQuery" ng-model-options="{debounce: 450}" placeholder="Search Methods">
 			<ul class="target-list">
-				<li ng-repeat="target in vm.api.targets | HasApiTargetFilter:vm.methodSearchQuery | orderBy:'name'">
-					{{target.name}} ({{(target.methods | HasApiMethodFilter:vm.methodSearchQuery).length}})
+
+				<accordion-group is-open="vm.methodSearchQuery.length > 0" ng-repeat="target in vm.api.targets | orderBy:'name'" ng-if="vm.showTarget(target)">
+					<accordion-heading><span ng-bind-html="vm.highlightSubString(target.name, vm.methodSearchQuery)"></span> (<span class="ul">{{ vm.getNumVisibleMethods(target) }}</span>)</accordion-heading>
 					<ul class="method-list">
-						<li ng-repeat="method in target.methods | HasApiMethodFilter:vm.methodSearchQuery | orderBy:'name'">
-							<a href="#/{{currentApi.alias}}/controller/{{target.name}}/method/{{method.name}}">{{method.name}}</a>
+						<li ng-repeat="method in target.methods | orderBy:'name'" ng-if="vm.showMethod(method)">
+							<a ng-class="{'filter-item-match': vm.showMethod(method)}" href="#/{{currentApi.alias}}/controller/{{target.name}}/method/{{method.name}}"><span ng-bind-html="vm.highlightSubString(method.name, vm.methodSearchQuery)"></span></a>
 						</li>
 					</ul>
-				</li>
+				</accordion-group>
 			</ul>
 		</accordion-group>
 	</accordion>

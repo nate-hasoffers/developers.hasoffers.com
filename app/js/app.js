@@ -31,16 +31,6 @@ var DocApp;
     app.service('UserInfo', DocApp.services.UserInfo);
     app.service('HasModal', DocApp.services.HasModal);
     // Attach filters
-    app.filter('HasApiTargetFilter', function () {
-        return function (targets, methodNamePartial) {
-            return DocApp.filters.HasApiTargetFilter.filter(targets, methodNamePartial);
-        };
-    });
-    app.filter('HasApiMethodFilter', function () {
-        return function (methods, methodNamePartial) {
-            return DocApp.filters.HasApiMethodFilter.filter(methods, methodNamePartial);
-        };
-    });
     app.filter('DecodeUriFilter', function () {
         return function (url) {
             return DocApp.filters.DecodeUriFilter.filter(url);
@@ -88,7 +78,7 @@ var DocApp;
         });
     });
     // Run the application
-    app.run(function ($rootScope, $route, $location) {
+    app.run(function ($rootScope, $route, $location, $anchorScroll) {
         // Set the brand and affiliate API identifiers
         $rootScope.brandApi = brandApi;
         $rootScope.affiliateApi = affiliateApi;
@@ -102,6 +92,8 @@ var DocApp;
         });
         // Only broadcast api changes if the new api is valid and different
         $rootScope.$on('$routeChangeSuccess', function (e, current, previous) {
+            // Scroll to top on change
+            $anchorScroll();
             var prevApi = $rootScope.currentApi;
             $rootScope.currentApi = (current.params.api === brandApi.alias ? brandApi : affiliateApi);
             if (prevApi !== $rootScope.currentApi) {
