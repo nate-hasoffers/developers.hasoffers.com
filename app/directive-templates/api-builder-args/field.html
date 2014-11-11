@@ -2,4 +2,4 @@
         ng-model="arg.value"
         ng-options="field.name for field in arg.selectedDataType.model.fields | filter:{writable:true} | orderBy:'name'">
     <option value="">-- Choose a Field --</option>
-</select> <a ng-show="arg.value != null" tooltip-html-unsafe="{{arg.value.description}}" tooltip-append-to-body="true"><i class="icon-question-sign"></i></a>
+</select> <a href="javascript:void(0);" onclick="jQuery(this).focus();" tooltip-trigger="focus" ng-show="arg.value != null" tooltip-html-unsafe="{{arg.value.description}}" tooltip-append-to-body="true"><i class="icon-question-sign"></i></a>

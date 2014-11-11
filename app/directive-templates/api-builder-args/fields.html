@@ -2,7 +2,7 @@
 
     <li ng-repeat="field in arg.value">
         <button ng-click="arg.value.splice($index, 1)"><i ng-show="arg.value[$index] != null" class="icon-trash close-image"></i></button>
-        <span class="model-field-name"><strong>{{field.name}}</strong> <a ng-show="arg.value != null" tooltip-html-unsafe="{{field.description}}" tooltip-append-to-body="true"><i class="icon-question-sign"></i></a></span>
+        <span class="model-field-name"><strong>{{field.name}}</strong> <a href="javascript:void(0);" onclick="jQuery(this).focus();" tooltip-trigger="focus" ng-show="arg.value != null" tooltip-html-unsafe="{{field.description}}" tooltip-append-to-body="true"><i class="icon-question-sign"></i></a></span>
     </li>
 
     <li class="add-next-input">

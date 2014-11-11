@@ -12,7 +12,7 @@
 
 	<div style="white-space: nowrap;">
 		<span class="filter-labels-container">
-			<button ng-click="arg.value.fieldFilters.splice($index, 1)"><i ng-show="arg.value.fieldFilters[$index].field != null" class="icon-trash close-image"></i></button> <span class="model-field-name"><strong>{{fieldFilter.field.name}}</strong> <a tooltip-html-unsafe="{{fieldFilter.field.description}}" tooltip-append-to-body="true"><i class="icon-question-sign"></i></a></span>
+			<button ng-click="arg.value.fieldFilters.splice($index, 1)"><i ng-show="arg.value.fieldFilters[$index].field != null" class="icon-trash close-image"></i></button> <span class="model-field-name"><strong>{{fieldFilter.field.name}}</strong> <a href="javascript:void(0);" onclick="jQuery(this).focus();" tooltip-trigger="focus" tooltip-html-unsafe="{{fieldFilter.field.description}}" tooltip-append-to-body="true"><i class="icon-question-sign"></i></a></span>
 
 			<select class="input-small"
 					ng-model="fieldFilter.relationalOperator"
