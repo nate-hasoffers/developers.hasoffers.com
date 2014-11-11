@@ -95,7 +95,7 @@ var DocApp;
             // Scroll to top on change
             $anchorScroll();
             var prevApi = $rootScope.currentApi;
-            $rootScope.currentApi = (current.params.api === brandApi.alias ? brandApi : affiliateApi);
+            $rootScope.currentApi = (current.params.api === affiliateApi.alias ? affiliateApi : brandApi);
             if (prevApi !== $rootScope.currentApi) {
                 $rootScope.$broadcast('apiChange');
             }

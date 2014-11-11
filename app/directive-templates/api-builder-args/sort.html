@@ -7,7 +7,7 @@
 
         <span class="model-field-name">
             <strong>{{sortCombo.field.name}}</strong>
-            <a ng-show="arg.value != null" tooltip-html-unsafe="{{sortCombo.field.description}}" tooltip-append-to-body="true"><i class="icon-question-sign"></i></a>
+            <a ng-show="arg.value != null" href="javascript:void(0);" onclick="jQuery(this).focus();" tooltip-trigger="focus" tooltip-html-unsafe="{{sortCombo.field.description}}" tooltip-append-to-body="true"><i class="icon-question-sign"></i></a>
         </span>
 
         <select class="input-small"
